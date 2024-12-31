@@ -1,24 +1,27 @@
-#include <linux/init.h>   // Modül giriş/çıkış fonksiyonları için
-#include <linux/module.h> // Gerekli modül tanımlamaları
-#include <linux/kernel.h> // KERNEL_INFO mesajları için
-
-// Lisans, yazar, açıklama bilgileri
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/jiffies.h>
+#include <linux/time.h>
+ 
+static unsigned long start_time; // ModÃ¼l baÅŸlatÄ±lma zamanÄ±
+static int load_count = 0; // ModÃ¼l yÃ¼klenme sayÄ±sÄ±
+ 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Elif Buse Öztürk");
-MODULE_DESCRIPTION("Basit bir Hello World Kernel Modülü");
-MODULE_VERSION("1.0");
-
-// Modül yüklendiğinde çalışacak fonksiyon
-static int __init hello_init(void) {
-    printk(KERN_INFO "Hello, Kernel World!\n");
-    return 0; // Başarılı yükleme
+MODULE_AUTHOR("Sizin Ä°sminiz");
+MODULE_DESCRIPTION("Basit bir Linux sÃ¼rÃ¼cÃ¼ modÃ¼lÃ¼");
+MODULE_VERSION("0.1"); 
+static int __init simple_driver_init(void) {
+    load_count++; // YÃ¼klenme sayÄ±sÄ±nÄ± artÄ±r
+    start_time = jiffies; // BaÅŸlangÄ±Ã§ zamanÄ±nÄ± al
+    printk(KERN_INFO "Simple Driver: BaÅŸlatÄ±ldÄ±! YÃ¼klenme sayÄ±sÄ±: %d\n", load_count);
+ return 0;
 }
-
-// Modül kaldırıldığında çalışacak fonksiyon
-static void __exit hello_exit(void) {
-    printk(KERN_INFO "Goodbye, Kernel World!\n");
-}
-
-// Modül giriş/çıkış fonksiyonlarını tanımla
-module_init(hello_init);
-module_exit(hello_exit);
+  
+static void __exit simple_driver_exit(void) {
+    unsigned long elapsed_time = jiffies - start_time; // GeÃ§en zamanÄ± hesapla
+    printk(KERN_INFO "Simple Driver: KapatÄ±ldÄ±! Ã‡alÄ±ÅŸma sÃ¼resi: %lu jiffies\n", elapsed_time);
+ }
+  
+ module_init(simple_driver_init);
+ module_exit(simple_driver_exit);
