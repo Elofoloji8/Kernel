@@ -1,2 +1,2 @@
 # IsletimSistemleriOdev
-İşletim sistemleri dersi "Sürücüler" konulu yazılım ödevim.
+Linux işletim sisteminde bir kernel modül örneği.
